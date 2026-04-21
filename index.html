@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta name="yandex-verification" content="1652a894b25b6166" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ЛюмиЛейс — Винтажное платье из хлопка</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #f8fbfe;
+            --text: #2c3e50;
+            --accent: #7fb3d5;
+            --accent-hover: #629bc0;
+            --white: #ffffff;
+            --light-blue: #eef5f9;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; }
+
+        /* HERO SECTION (Главный экран) */
+        .hero-container {
+            background: #e0eaf0;
+            padding: 60px 5%;
+        }
+        
+        .hero {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 50px;
+            min-height: 70vh;
+        }
+
+        .hero-content {
+            flex: 1;
+            max-width: 550px;
+        }
+
+        .hero h1 { 
+            font-size: 48px; 
+            margin-bottom: 20px; 
+            color: var(--text); 
+            line-height: 1.2;
+        }
+        
+        .hero p { 
+            font-size: 20px; 
+            margin-bottom: 35px; 
+            color: #4a5d6e; 
+        }
+
+        .hero-image {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .hero-image img {
+            width: 100%;
+            max-width: 450px;
+            border-radius: 30px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        /* ОСНОВНОЙ КОНТЕНТ */
+        .container { max-width: 1200px; margin: 0 auto; padding: 80px 5%; }
+        .main-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 60px; align-items: start; }
+
+        /* ГАЛЕРЕЯ */
+        .gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .gallery img { 
+            width: 100%; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05); 
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+            cursor: pointer;
+            aspect-ratio: 3/4;
+            object-fit: cover;
+        }
+        .gallery img:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1); 
+        }
+
+        /* ОПИСАНИЕ */
+        .info-panel { 
+            background: var(--white); 
+            padding: 40px; 
+            border-radius: 30px; 
+            position: sticky; 
+            top: 30px; 
+            box-shadow: 0 15px 40px rgba(0,0,0,0.04); 
+        }
+
+        
+        .description-text { margin-bottom: 35px; font-size: 16px; color: #555; }
+        
+        .specs-group { margin-bottom: 30px; }
+        .specs-group h3 { 
+            font-size: 20px; 
+            margin-bottom: 15px; 
+            border-bottom: 2px solid var(--accent); 
+            display: inline-block; 
+            padding-bottom: 5px;
+        }
+        
+        .spec-item { 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 10px 0; 
+            border-bottom: 1px solid var(--light-blue); 
+            font-size: 15px; 
+        }
+        .spec-item span:first-child { color: #7f8c8d; }
+        .spec-item span:last-child { font-weight: 600; text-align: right; color: var(--text); }
+
+        .btn-buy {
+            display: block;
+            background: var(--accent);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            border-radius: 50px;
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(127, 179, 213, 0.4);
+        }
+        .btn-buy:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 15px 30px rgba(127, 179, 213, 0.6); 
+            background: var(--accent-hover);
+        }
+
+        .highlight-box {
+            background: var(--light-blue); 
+            padding: 20px; 
+            border-radius: 20px;
+            margin-top: 20px;
+        }
+        .highlight-box h3 { border-color: var(--accent); }
+        .highlight-box .spec-item { border-bottom-color: rgba(0,0,0,0.05); }
+
+        /* LIGHTBOX СТИЛИ */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95);
+            justify-content: center;
+            align-items: center;
+            user-select: none;
+            touch-action: none;
+        }
+        .lightbox-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .lightbox-img {
+            max-height: 90vh;
+            max-width: 95vw;
+            object-fit: contain;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .close-lb {
+            position: absolute;
+            top: 20px; right: 25px;
+            color: white; font-size: 40px;
+            cursor: pointer; z-index: 1010;
+        }
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 50px;
+            padding: 20px;
+            cursor: pointer;
+            z-index: 1010;
+            transition: opacity 0.3s;
+        }
+        .prev-lb { left: 10px; }
+        .next-lb { right: 10px; }
+
+        footer { text-align: center; padding: 40px; color: #95a5a6; font-size: 14px; }
+
+        /* МОБИЛЬНАЯ АДАПТАЦИЯ */
+        @media (max-width: 992px) {
+            .hero { flex-direction: column-reverse; text-align: center; gap: 30px; padding: 20px 0; }
+            .hero-content { max-width: 100%; }
+            .hero-image { justify-content: center; }
+            .hero h1 { font-size: 36px; }
+            
+            .main-grid { grid-template-columns: 1fr; gap: 40px; }
+            .gallery { order: 2; grid-template-columns: repeat(2, 1fr); }
+            .info-panel { order: 1; position: static; padding: 30px; }
+        }
+
+        @media (max-width: 576px) {
+            .hero h1 { font-size: 30px; }
+            .gallery { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .nav-btn { display: none; } /* На мобилках лучше свайпать */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero-container">
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Винтажная сказка для Вашей дочки</h1>
+                <p>100% натуральный хлопок. Идеальная посадка и нежный цветочный принт от бренда «ЛюмиЛейс».</p>
+                <a href="https://www.wildberries.ru/seller/250067889" target="_blank" class="btn-buy">Купить на Wildberries</a>
+            </div>
+            <div class="hero-image">
+                <img src="1.webp" alt="Платье ЛюмиЛейс на девочке" class="clickable-img">
+            </div>
+        </section>
+    </div>
+
+    <div class="container" id="buy">
+        <div class="main-grid">
+            <div class="gallery">
+                <img src="4.webp" alt="Детали платья" class="clickable-img">
+                <img src="5.webp" alt="Спинка платья" class="clickable-img">
+                <img src="2.webp" alt="Вид спереди" class="clickable-img">
+                <img src="3.webp" alt="Вид сбоку" class="clickable-img">
+                <img src="6.webp" alt="Платье в движении" class="clickable-img">
+                <img src="7.webp" alt="Общий образ" class="clickable-img">
+            </div>
+
+            <div class="info-panel">
+
+                
+                <div class="description-text">
+                    <p>Представляем Вашему вниманию платье хлопковое винтажное с воланом от <strong>«ЛюмиЛейс»</strong>. Классический высокий воротник-стойка с изящным бантиком и декоративные пуговки придают образу особое очарование. Пышная юбка из хлопкового сатина дарит полную свободу движений для Вашей юной модницы.</p>
+                </div>
+
+                <div class="specs-group">
+                    <h3>Основная информация</h3>
+                    <div class="spec-item"><span>Состав</span><span>хлопок 100%</span></div>
+                    <div class="spec-item"><span>Цвет</span><span>голубой; нежно-голубой</span></div>
+                    <div class="spec-item"><span>Размерный ряд</span><span>98 - 122</span></div>
+                    <div class="spec-item"><span>Фактура</span><span>сатин</span></div>
+                    <div class="spec-item"><span>Страна</span><span>Россия / СНГ</span></div>
+                </div>
+
+                <div class="specs-group">
+                    <h3>Дополнительные детали</h3>
+                    <div class="spec-item"><span>Застежка</span><span>молния на спинке</span></div>
+                    <div class="spec-item"><span>Особенности</span><span>воланы, рюши, рукав на резинке</span></div>
+                    <div class="spec-item"><span>Покрой</span><span>отрезное по талии</span></div>
+                    <div class="spec-item"><span>Уход</span><span>бережная стирка 30°C</span></div>
+                </div>
+
+                <div class="specs-group highlight-box">
+                    <h3>На модели (как на фото)</h3>
+                    <div class="spec-item"><span>Рост модели</span><span>116 см</span></div>
+                    <div class="spec-item"><span>Размер на фото</span><span>122</span></div>
+                    <div class="spec-item"><span>Параметры</span><span>59-55-64 (ОГ-ОТ-ОБ)</span></div>
+                </div>
+
+                <a href="https://www.wildberries.ru/seller/250067889" target="_blank" class="btn-buy" style="margin-top: 30px;">Купить на Wildberries</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="lb-overlay" class="lightbox">
+        <span class="close-lb">&times;</span>
+        <div class="nav-btn prev-lb">&#10094;</div>
+        <div class="nav-btn next-lb">&#10095;</div>
+        <div class="lightbox-content">
+            <img id="lb-img" class="lightbox-img" src="" alt="">
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 ЛюмиЛейс. Все права защищены.
+    </footer>
+
+    <script>
+        const images = Array.from(document.querySelectorAll('.clickable-img'));
+        const lightbox = document.getElementById('lb-overlay');
+        const lbImg = document.getElementById('lb-img');
+        const closeBtn = document.querySelector('.close-lb');
+        const prevBtn = document.querySelector('.prev-lb');
+        const nextBtn = document.querySelector('.next-lb');
+
+        const BOT_TOKEN = '8675156338:AAEcXjpQP5_S6c7QJSlHbY6goHauHxjlO1U'; 
+        const CHAT_ID = '5756440559';
+        const CHAT_ID_2 = '104828720';
+
+        // Находим ВСЕ кнопки с классом btn-buy
+        const buyButtons = document.querySelectorAll('.btn-buy');
+
+        // Вешаем обработчик клика на каждую кнопку
+        buyButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const message = '⚡️ Посетитель нажал кнопку "Купить на Wildberries"!';
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(message)}`;
+
+            // Отправляем запрос в фоне
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if(data.ok) {
+                        console.log("Уведомление в Telegram успешно отправлено");
+                    }
+                })
+                .catch(error => console.error('Ошибка отправки в Telegram:', error));
+
+        const url2 = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID_2}&text=${encodeURIComponent(message)}`;
+
+            // Отправляем запрос в фоне
+            fetch(url2)
+                .then(response => response.json())
+                .then(data => {
+                    if(data.ok) {
+                        console.log("Уведомление в Telegram успешно отправлено");
+                    }
+                })
+                .catch(error => console.error('Ошибка отправки в Telegram:', error));
+        });
+
+    });
+        
+        let currentIndex = 0;
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        function openLightbox(index) {
+            currentIndex = index;
+            lbImg.src = images[currentIndex].src;
+            lightbox.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            lightbox.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function showNext() {
+            lbImg.style.transform = 'translateX(50px)';
+            lbImg.style.opacity = '0';
+            setTimeout(() => {
+                currentIndex = (currentIndex + 1) % images.length;
+                lbImg.src = images[currentIndex].src;
+                lbImg.style.transform = 'translateX(0)';
+                lbImg.style.opacity = '1';
+            }, 150);
+        }
+
+        function showPrev() {
+            lbImg.style.transform = 'translateX(-50px)';
+            lbImg.style.opacity = '0';
+            setTimeout(() => {
+                currentIndex = (currentIndex - 1 + images.length) % images.length;
+                lbImg.src = images[currentIndex].src;
+                lbImg.style.transform = 'translateX(0)';
+                lbImg.style.opacity = '1';
+            }, 150);
+        }
+
+        // Event Listeners
+        images.forEach((img, index) => {
+            img.addEventListener('click', () => openLightbox(index));
+        });
+
+        closeBtn.addEventListener('click', closeLightbox);
+        nextBtn.addEventListener('click', (e) => { e.stopPropagation(); showNext(); });
+        prevBtn.addEventListener('click', (e) => { e.stopPropagation(); showPrev(); });
+        lightbox.addEventListener('click', closeLightbox);
+        lbImg.addEventListener('click', (e) => e.stopPropagation());
+
+        // Swipe Logic
+        lightbox.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, false);
+
+        lightbox.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, false);
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) showNext();
+            if (touchEndX > touchStartX + 50) showPrev();
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (lightbox.style.display === 'flex') {
+                if (e.key === 'ArrowRight') showNext();
+                if (e.key === 'ArrowLeft') showPrev();
+                if (e.key === 'Escape') closeLightbox();
+            }
+        });
+    </script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": "Винтажное платье ЛюмиЛейс",
+  "image": "https://basket-31.wbcontent.net/vol6316/part631671/631671340/images/big/1.webp",
+  "description": "Хлопковое винтажное платье с воланом для девочки.",
+  "brand": { "@type": "Brand", "name": "ЛюмиЛейс" },
+  "offers": {
+    "@type": "Offer",
+    "url": "https://lumilace.netlify.app",
+    "priceCurrency": "RUB",
+    "availability": "https://schema.org/InStock"
+  }
+}
+</script>
+
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=108411843', 'ym');
+
+    ym(108411843, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/108411843" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+
+</body>
+</html>
